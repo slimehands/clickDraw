@@ -15,6 +15,7 @@ export interface playerFace {
         /* eslint-enable */
         again():void
         //done():void
+        done(userName: string, time:number): void
         
     }
     readonly gameCode: number;

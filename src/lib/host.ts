@@ -8,7 +8,7 @@ export class Host implements gameFace{
     private players: player[] = new Array<player>
     public myId: string = "";
     private conn: peerjs.DataConnection | undefined;
-    on: { set(arg0: number): void; event(event: unknown): void; again(): void; };
+    on: playerFace["on"]
     broadcast(data: packetToClient) {
         if (this.conn && this.conn.open) {
         this.conn.send(data);
@@ -37,10 +37,23 @@ export class Host implements gameFace{
     }
     checkClicks(){
         if(this.players.every((player) => player.clickTime != null) && this.myTime != null){
+            console.log("checking clicks");
             //need to change this part later
-            this.broadcast({type: "again"})
-
-            this.on.again()
+            let min: number = Number.MAX_VALUE;
+            let i = 0;
+            this.players.forEach((element, index) => {
+                if(element.clickTime  || 99999 < min){
+                    min = element.clickTime || 999999;
+                    i = index;
+                }
+            });
+            
+            const data = {userName : this.players[i].userName, time: min}
+            this.broadcast({type:"done", data: data})
+            console.log("fastest was");
+            console.log(data);
+            this.on.done(data.userName, data.time);
+            
         }
     }
     

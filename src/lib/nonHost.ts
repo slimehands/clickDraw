@@ -47,6 +47,9 @@ export class NonHost implements gameFace {
                 else if(data.type == 'again'){
                     intf.on.again()
                 }
+                else if(data.type == 'done'){
+                    intf.on.done(data.data.userName, data.data.time);
+                }
             })
             this.conn.on('close', () => console.log("Connection closed."));
             this.conn.on('error', (err) => console.error("Connection error:", err)); 
